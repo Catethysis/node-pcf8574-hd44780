@@ -26,22 +26,21 @@ module.exports = class pcf8574_hd44780 {
     let char_h = ((char & 0xF0) + 0x09);
     let char_l = (((char & 0x0F) << 4) + 0x09);
 
-    this.byte_out(char_h);
-    char_h |= 0x04;
-    this.byte_out(char_h);
-    char_h &= 0xF9;
-    this.byte_out(char_h);
+    nibble_out = (nibble) => {
+      this.byte_out(nibble);
+      nibble |= 0x04;
+      this.byte_out(nibble);
+      nibble &= 0xF9;
+      this.byte_out(nibble);
+    }
 
-    this.byte_out(char_l);
-    char_l |= 0x04;
-    this.byte_out(char_l);
-    char_l &= 0xF9;
-    this.byte_out(char_l);
+    nibble_out(char_h);
+    nibble_out(char_l);
   }
 
   print_line (line) {
     for (let i = 0; i < line.length; i++)
-    this.char_out(line.charCodeAt(i));
+      this.char_out(line.charCodeAt(i));
   }
 
   print_string (str) {
