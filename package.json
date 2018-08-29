@@ -1,0 +1,22 @@
+{
+  "name": "pcf8574-hd44780",
+  "version": "1.0.0",
+  "description": "",
+  "main": "pcf8574-hd44780.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Catethysis/node-pcf8574-hd44780.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Catethysis/node-pcf8574-hd44780/issues"
+  },
+  "homepage": "https://github.com/Catethysis/node-pcf8574-hd44780#readme",
+  "dependencies": {
+    "i2c-bus": "^4.0.1"
+  }
+}
