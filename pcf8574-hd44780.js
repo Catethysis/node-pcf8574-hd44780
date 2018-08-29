@@ -1,24 +1,21 @@
 const i2c = require('i2c-bus');
-const i2c1 = i2c.openSync(1);
+let i2c1, pcf_addr;
  
-i2c1.sendByteSync(0x27, 0xff);
-
 pcf8574_byte_out = (data) => {
-    i2c1.sendByteSync(0x27, data);
+    i2c1.sendByteSync(pcf_addr, data);
 }
 
-com = (com) => {
-	com |= 0x08;
-	pcf8574_byte_out(com);
-	com |= 0x04;
-	pcf8574_byte_out(com);
-	com &= 0xFB;
-	pcf8574_byte_out(com);
+sendCommand = (cmd) => {
+	cmd |= 0x08; pcf8574_byte_out(cmd);
+	cmd |= 0x04; pcf8574_byte_out(cmd);
+	cmd &= 0xFB; pcf8574_byte_out(cmd);
 }
 
-init = () => {
+init = (i2c_module, addr) => {
+    i2c1 = i2c.openSync(i2c_module);
+    pcf_addr = addr;
     const initString = [0x30, 0x30, 0x30, 0x20, 0x20, 0x80, 0x00, 0x80, 0x00, 0x10, 0x00, 0x60, 0x00, 0xC0];
-    initString.forEach(command => com(command));
+    initString.forEach(cmd => sendCommand(cmd));
 }
 
 char_out = (char) => {
@@ -43,7 +40,7 @@ print_line = (line) => {
         char_out(line.charCodeAt(i));
 }
 
-str_out = (str) => {
+print_string = (str) => {
     const line_length = 16;
     const cgram_line_gap = line_length + line_length / 2;
 
@@ -57,6 +54,8 @@ str_out = (str) => {
     }
 }
 
-const degree = 'ß';
-init();
-str_out(`1234${degree}567890,hello world!abcdefghijklmnopqrst9876543210`);
+module.exports = {
+    degree_sign: 'ß',
+    init,
+    print_string
+};
