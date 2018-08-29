@@ -1,14 +1,14 @@
 const i2c = require('i2c-bus');
-let I2C, pcf_addr;
+// let I2C, pcf_addr;
 
 module.exports = class pcf8574_hd44780 {
   constructor (i2c_module, addr) {
-    I2C = i2c.openSync(i2c_module);
-    pcf_addr = addr;
+    this.I2C = i2c.openSync(i2c_module);
+    this.pcf_addr = addr;
   }
 
   byte_out (data) {
-    I2C.sendByteSync(pcf_addr, data);
+    this.I2C.sendByteSync(this.pcf_addr, data);
   }
 
   sendCommand (cmd) {
@@ -22,20 +22,20 @@ module.exports = class pcf8574_hd44780 {
     initString.forEach(cmd => this.sendCommand(cmd));
   }
 
+  nibble_out (nibble) {
+    this.byte_out(nibble);
+    nibble |= 0x04;
+    this.byte_out(nibble);
+    nibble &= 0xF9;
+    this.byte_out(nibble);
+  }
+
   char_out (char) {
     let char_h = ((char & 0xF0) + 0x09);
     let char_l = (((char & 0x0F) << 4) + 0x09);
 
-    nibble_out = (nibble) => {
-      this.byte_out(nibble);
-      nibble |= 0x04;
-      this.byte_out(nibble);
-      nibble &= 0xF9;
-      this.byte_out(nibble);
-    }
-
-    nibble_out(char_h);
-    nibble_out(char_l);
+    this.nibble_out(char_h);
+    this.nibble_out(char_l);
   }
 
   print_line (line) {
