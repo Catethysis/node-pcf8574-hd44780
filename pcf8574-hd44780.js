@@ -1,16 +1,20 @@
 const i2c = require('i2c-bus');
 
 module.exports = class pcf8574_hd44780 {
-  constructor (i2c_module, addr) {
-    this.I2C = i2c.openSync(i2c_module);
-    this.pcf_addr = addr;
+  constructor ({i2cbus, pcf8574_addr}) {
+    this.I2C = i2c.openSync(i2cbus);
+    this.pcf_addr = pcf8574_addr;
   }
 
   scan_pcf8574 (callback) {
     // PCF8274 can only accept 20h..27h addresses
-    const min_addr = 0x20
+    const min_addr = 0x20;
     const max_addr = 0x27;
     this.I2C.scan(min_addr, max_addr, (err, devices) => callback(err, devices));
+  }
+
+  set pcf8574_addr (addr) {
+    this.pcf_addr = addr;
   }
 
   byte_out (data) {
