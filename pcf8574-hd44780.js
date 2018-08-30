@@ -1,10 +1,16 @@
 const i2c = require('i2c-bus');
-// let I2C, pcf_addr;
 
 module.exports = class pcf8574_hd44780 {
   constructor (i2c_module, addr) {
     this.I2C = i2c.openSync(i2c_module);
     this.pcf_addr = addr;
+  }
+
+  scan (callback) {
+    // PCF8274 can accept only 20h..27h addresses
+    const min_addr = 0x20
+    const max_addr = 0x27;
+    this.I2C.scan(min_addr, max_addr, (err, devices) => callback(err, devices));
   }
 
   byte_out (data) {
@@ -17,7 +23,7 @@ module.exports = class pcf8574_hd44780 {
     cmd &= 0xFB; this.byte_out(cmd);
   }
 
-  init (i2c_module, addr) {
+  init () {
     const initString = [0x30, 0x30, 0x30, 0x20, 0x20, 0x80, 0x00, 0x80, 0x00, 0x10, 0x00, 0x60, 0x00, 0xC0];
     initString.forEach(cmd => this.sendCommand(cmd));
   }
@@ -43,6 +49,10 @@ module.exports = class pcf8574_hd44780 {
       this.char_out(line.charCodeAt(i));
   }
 
+  print_lines (lines) {
+    lines.forEach(line => this.print_line(line));
+  }
+
   print_string (str) {
     const line_length = 16;
     const cgram_line_gap = line_length + line_length / 2;
@@ -57,7 +67,7 @@ module.exports = class pcf8574_hd44780 {
     }
   }
 
-  get degree_sign() {
+  get degree_sign () {
     return 'ß';
   }
 }
