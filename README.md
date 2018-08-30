@@ -1,5 +1,7 @@
 # node-pcf8574-hd44780
+
 ## If you know PCF8574 address
+
 ```js
 const lcd = require('./pcf8574-hd44780');
 let LCD = new lcd({i2cbus: 1, pcf8574_addr: 0x27});
@@ -9,6 +11,7 @@ LCD.print_string(`Temperature: 27${LCD.degree_sign}C`);
 ```
 
 ##If you need to search PCF8574 on the bus first
+
 ```js
 const lcd = require('./pcf8574-hd44780');
 let LCD = new lcd({i2cbus: 1});
