@@ -6,8 +6,8 @@ module.exports = class pcf8574_hd44780 {
     this.pcf_addr = addr;
   }
 
-  scan (callback) {
-    // PCF8274 can accept only 20h..27h addresses
+  scan_pcf8574 (callback) {
+    // PCF8274 can only accept 20h..27h addresses
     const min_addr = 0x20
     const max_addr = 0x27;
     this.I2C.scan(min_addr, max_addr, (err, devices) => callback(err, devices));
@@ -23,7 +23,7 @@ module.exports = class pcf8574_hd44780 {
     cmd &= 0xFB; this.byte_out(cmd);
   }
 
-  init () {
+  init_hd44780 () {
     const initString = [0x30, 0x30, 0x30, 0x20, 0x20, 0x80, 0x00, 0x80, 0x00, 0x10, 0x00, 0x60, 0x00, 0xC0];
     initString.forEach(cmd => this.sendCommand(cmd));
   }
