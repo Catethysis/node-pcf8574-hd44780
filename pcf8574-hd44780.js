@@ -81,9 +81,9 @@ module.exports = class pcf8574_hd44780 {
        left_arrow: String.fromCharCode(0x7F),
       bold_dot   : String.fromCharCode(0xA5),
       square     : String.fromCharCode(0xDB),
-      degree_sign: String.fromCharCode(0xDF),
+      degree     : String.fromCharCode(0xDF),
       ohm        : String.fromCharCode(0xF4),
-      divide_sign: String.fromCharCode(0xFD),
+      divide     : String.fromCharCode(0xFD),
       empty_space: String.fromCharCode(0xFE),
       black_space: String.fromCharCode(0xFF),
     };
