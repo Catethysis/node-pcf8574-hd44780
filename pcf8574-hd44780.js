@@ -4,6 +4,7 @@ module.exports = class pcf8574_hd44780 {
   constructor ({i2cbus, pcf8574_addr}) {
     this.I2C = i2c.openSync(i2cbus);
     this.pcf_addr = pcf8574_addr;
+    this.led = false;
   }
 
   scan_pcf8574 (callback) {
@@ -22,11 +23,11 @@ module.exports = class pcf8574_hd44780 {
   }
 
   byte_out (data) {
-    this.I2C.sendByteSync(this.pcf_addr, data);
+    this.I2C.sendByteSync(this.pcf_addr, (this.led) ? data | 0x08 : data);
   }
 
   sendCommand (cmd) {
-    cmd |= 0x08; this.byte_out(cmd);
+    this.byte_out(cmd);
     cmd |= 0x04; this.byte_out(cmd);
     cmd &= 0xFB; this.byte_out(cmd);
   }
@@ -45,8 +46,8 @@ module.exports = class pcf8574_hd44780 {
   }
 
   char_out (char) {
-    let char_h = ((char & 0xF0) + 0x09);
-    let char_l = (((char & 0x0F) << 4) + 0x09);
+    let char_h = ((char & 0xF0) + 0x01);
+    let char_l = (((char & 0x0F) << 4) + 0x01);
 
     this.nibble_out(char_h);
     this.nibble_out(char_l);
