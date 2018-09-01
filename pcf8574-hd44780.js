@@ -8,9 +8,13 @@ module.exports = class pcf8574_hd44780 {
 
   scan_pcf8574 (callback) {
     // PCF8274 can only accept 20h..27h addresses
-    const min_addr = 0x20;
-    const max_addr = 0x27;
-    this.I2C.scan(min_addr, max_addr, (err, devices) => callback(err, devices));
+    let pcf8574_devices = this.I2C.scanSync(0x20, 0x27);
+
+    // PCF8274A can only accept 38h..3Fh addresses
+    let pcf8574a_devices = this.I2C.scanSync(0x38, 0x3F);
+
+    let devices = pcf8574_devices.concat(pcf8574a_devices);
+    callback(devices);
   }
 
   set pcf8574_addr (addr) {
